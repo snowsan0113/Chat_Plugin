@@ -1,0 +1,4 @@
+name: Chat_Plugin
+version: '1.0-SNAPSHOT'
+main: snowsan0113.chat_Plugin.Main
+api-version: '1.20'

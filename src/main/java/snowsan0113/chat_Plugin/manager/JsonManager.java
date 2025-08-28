@@ -9,8 +9,12 @@ import snowsan0113.chat_Plugin.Main;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JsonManager {
+
+    private static final Map<FileType, JsonObject> memory_json_map = new HashMap<>();
 
     private final FileType type;
     private final Gson gson;
@@ -18,6 +22,7 @@ public class JsonManager {
     public JsonManager(FileType type) {
         this.type = type;
         this.gson = new GsonBuilder().setPrettyPrinting().create();
+        updateJson();
     }
 
     public JsonElement getObjectValue(String key) {
@@ -32,14 +37,7 @@ public class JsonManager {
     }
 
     public JsonObject getRawJson() {
-        try {
-            if (!getFile().exists()) createJson(); //無い場合は作成
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(getFile().toPath()), StandardCharsets.UTF_8))) {
-                return gson.fromJson(reader, JsonObject.class);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return memory_json_map.get(type);
     }
 
     public File getFile() {
@@ -55,6 +53,7 @@ public class JsonManager {
             try (InputStream in = Main.class.getResourceAsStream("/" + type.getFile().getName())) {
                 if (in == null) throw new FileNotFoundException(type.getFile().getName());
                 Files.copy(in, type.getFile().toPath());
+                updateJson();
             }
         }
         return true;
@@ -63,8 +62,21 @@ public class JsonManager {
     private void writeFile(String date) {
         try (BufferedWriter write = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(getFile().toPath()), StandardCharsets.UTF_8))) {
             write.write(date);
+            updateJson();
         }
         catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateJson() {
+        try {
+            if (!getFile().exists()) createJson(); //無い場合は作成
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(getFile().toPath()), StandardCharsets.UTF_8))) {
+                JsonObject json = gson.fromJson(reader, JsonObject.class);
+                memory_json_map.put(type, json);
+            }
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

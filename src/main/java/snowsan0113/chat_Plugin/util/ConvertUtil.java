@@ -2,6 +2,7 @@ package snowsan0113.chat_Plugin.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -17,7 +18,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class ConvertUtil {
 
-    private static final Map<String, String> roma_kana = new HashMap<>();
+    private static final Map<String, String> roma_kana = new HashMap<>(); //ローマー字 → ひらがな
+    private static final Map<String, String> text_kanji_map = new HashMap<>(); //ひらがな→漢字等の保存用
 
     static {
         //基本
@@ -68,6 +70,10 @@ public class ConvertUtil {
     }
 
     public static String getTextToKanji(String text) throws IOException {
+        if (text_kanji_map.containsKey(text)) {
+            return text_kanji_map.get(text);
+        }
+
         text = text.replaceAll("　", "").replaceAll(" ", "") + ",";
         URL url = new URL("http://www.google.com/transliterate?langpair=ja-Hira|ja&text=" + URLEncoder.encode(text, StandardCharsets.UTF_8));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -84,9 +90,9 @@ public class ConvertUtil {
         con.disconnect();
         JsonArray json = (new Gson()).fromJson(content.toString(), JsonArray.class);
 
-        System.out.println(url.toString() +
-                json.toString());
-        return json.get(0).getAsJsonArray().get(1).getAsJsonArray().get(0).getAsString();
+        String result_string = json.get(0).getAsJsonArray().get(1).getAsJsonArray().get(0).getAsString();
+        text_kanji_map.put(text, result_string); //メモリ上に「テキスト->漢字」の結果を保存
+        return result_string;
     }
 
     public static CompletableFuture<String> getAsyncTextToKanji(String text) {

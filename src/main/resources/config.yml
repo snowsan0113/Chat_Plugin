@@ -1,0 +1,6 @@
+# チャットに関する設定
+
+## 送信メッセージに関する設定
+send_message:
+  can_send_word: []
+  timeout_time: 0

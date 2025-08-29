@@ -3,6 +3,7 @@ package snowsan0113.chat_Plugin.manager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -10,6 +11,7 @@ public class PlayerManager {
 
     private static final JsonManager json = new JsonManager(JsonManager.FileType.PLAYER_DATA);
     private static final JsonObject raw_json = json.getRawJson();
+    private static final Map<UUID, Boolean> can_chat_map = new HashMap<>();
     private final UUID uuid;
 
     public PlayerManager(UUID uuid) {
@@ -36,6 +38,17 @@ public class PlayerManager {
             map.put(data_uuid, new PlayerManager(data_uuid));
         }
         return map;
+    }
+
+    public static boolean canChat(Player player) {
+        if (!can_chat_map.containsKey(player.getUniqueId())) {
+            can_chat_map.put(player.getUniqueId(), true);
+        }
+        return can_chat_map.get(player.getUniqueId());
+    }
+
+    public static void setCanChat(Player player, boolean flag) {
+        can_chat_map.put(player.getUniqueId(), flag);
     }
 
 }

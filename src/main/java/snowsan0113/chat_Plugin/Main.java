@@ -12,6 +12,7 @@ public final class Main extends JavaPlugin {
         PluginManager plm = getServer().getPluginManager();
         plm.registerEvents(new PlayerChatListener(), this);
 
+        saveDefaultConfig();
     }
 
     @Override

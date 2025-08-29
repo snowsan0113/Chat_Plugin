@@ -36,7 +36,8 @@ public class PlayerChatListener implements Listener {
         recipient_set.removeIf(recipient -> {
             if (recipient.equals(player)) return false; //自分はスキップ
             PlayerManager recipientManager = new PlayerManager(recipient.getUniqueId());
-            return recipientManager.getHidePlayers().contains(player.getUniqueId());
+
+            return recipientManager.getHidePlayers().contains(player.getUniqueId()) || recipientManager.getHideWord().contains(message);
         });
         event.setFormat(format + "(" + ConvertUtil.getAsyncTextToKanji(message).get() + ")");
 

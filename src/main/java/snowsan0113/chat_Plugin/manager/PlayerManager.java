@@ -30,6 +30,16 @@ public class PlayerManager {
         return hide_player_set;
     }
 
+    public Set<String> getHideWord() {
+        JsonElement get_element = json.getObjectValue(uuid.toString() + ".hide_words");
+        Set<String> hide_word_set = new HashSet<>();
+        JsonArray hide_word_array = get_element.getAsJsonArray();
+        for (JsonElement hide_word_element : hide_word_array) {
+            hide_word_set.add(hide_word_element.getAsString());
+        }
+        return hide_word_set;
+    }
+
     public static Map<UUID, PlayerManager> getPlayerDataMap() {
         Map<UUID, PlayerManager> map = new HashMap<>();
         Set<String> uuid_string_set = raw_json.keySet();

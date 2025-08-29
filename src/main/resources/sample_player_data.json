@@ -1,5 +1,6 @@
 {
   "sample_player": {
-    "hide_players": []
+    "hide_players": [],
+    "hide_words": ["あああ", "いいい"]
   }
 }

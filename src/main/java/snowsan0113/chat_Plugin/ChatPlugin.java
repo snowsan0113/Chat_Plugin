@@ -11,6 +11,14 @@ public final class ChatPlugin extends JavaPlugin {
     public void onEnable() {
         PluginManager plm = getServer().getPluginManager();
 
+        //コマンド
+        getCommand("normal_mute").setExecutor(new MuteCommand());
+        getCommand("temp_mute").setExecutor(new MuteCommand());
+        getCommand("get_mute").setExecutor(new MuteCommand());
+
+        //イベント
+        plm.registerEvents(new AsyncPlayerChatListener(), this);
+
         getLogger().info("プラグインが有効になりました。");
     }
 

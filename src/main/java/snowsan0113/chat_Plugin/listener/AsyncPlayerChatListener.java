@@ -30,8 +30,15 @@ public class AsyncPlayerChatListener implements Listener {
             PluginChatUtil.sendMessage(player, "連続送信をすることはできません。" + manager.getTimeOutTime() + "秒お待ちください。");
             event.setCancelled(true);
         }
+
         String roma_kana = TextConvertAPI.getRomaToKana(message);
-        event.setFormat("<" + player.getName() + ">: " + TextConvertAPI.getConvertText(roma_kana) + ChatColor.GRAY + "(" + message + ")");
+        if (message.matches("[0-9+\\-*/%^(). ]+")) {
+            double math_text = TextConvertAPI.getConvertMathText(message);
+            event.setFormat("<" + player.getName() + ">: " + TextConvertAPI.getConvertText(roma_kana) + ChatColor.GRAY + "(" + math_text + ")");
+        }
+        else {
+            event.setFormat("<" + player.getName() + ">: " + TextConvertAPI.getConvertText(roma_kana) + ChatColor.GRAY + "(" + message + ")");
+        }
     }
 
 }

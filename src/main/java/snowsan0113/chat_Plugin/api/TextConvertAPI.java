@@ -2,8 +2,12 @@ package snowsan0113.chat_Plugin.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -110,6 +114,13 @@ public class TextConvertAPI {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /*
+
+     */
+    public static double getConvertMathText(String text) {
+        return new ExpressionBuilder(text).build().evaluate();
     }
 
 }

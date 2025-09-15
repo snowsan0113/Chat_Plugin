@@ -2,6 +2,7 @@ package snowsan0113.chat_Plugin.manager;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import snowsan0113.chat_Plugin.ChatPlugin;
@@ -39,14 +40,6 @@ public class PlayerManager {
     }
 
     public int getTimeOutTime() {
-        return timeout_map.get(player);
-    }
-
-    public boolean canChat() {
-        if (MuteManager.isMuted(player) || timeout_map.containsKey(player)) {
-            return false;
-        }
-
-        return true;
+        return timeout_map.getOrDefault(player, -1);
     }
 }

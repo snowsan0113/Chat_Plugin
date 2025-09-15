@@ -19,6 +19,9 @@ public final class ChatPlugin extends JavaPlugin {
         //イベント
         plm.registerEvents(new AsyncPlayerChatListener(), this);
 
+        //その他
+        saveDefaultConfig();
+
         getLogger().info("プラグインが有効になりました。");
     }
 

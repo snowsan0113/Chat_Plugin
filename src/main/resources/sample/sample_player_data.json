@@ -1,0 +1,10 @@
+{
+  "A-UUID": {
+    "name": "A",
+    "hide_players": ["B-UUID"]
+  },
+  "B-UUID": {
+    "name": "B",
+    "hide_players": ["A-UUID"]
+  }
+}

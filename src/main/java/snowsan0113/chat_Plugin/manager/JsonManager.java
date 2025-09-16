@@ -107,7 +107,8 @@ public class JsonManager {
     }
 
     public enum FileType {
-        MUTE_DATA("mute_data.json");
+        MUTE_DATA("mute_data.json"),
+        PLAYER_DATA("player_data.json");
 
         private final String name;
 

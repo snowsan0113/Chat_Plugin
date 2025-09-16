@@ -13,6 +13,8 @@ import snowsan0113.chat_Plugin.manager.PlayerManager;
 import snowsan0113.chat_Plugin.manager.PluginConfigManager;
 import snowsan0113.chat_Plugin.util.PluginChatUtil;
 
+import java.util.Set;
+
 public class AsyncPlayerChatListener implements Listener {
 
     @EventHandler
@@ -20,7 +22,14 @@ public class AsyncPlayerChatListener implements Listener {
         Player player = event.getPlayer();
         String message = event.getMessage();
         String format = event.getFormat();
+        Set<Player> recipients = event.getRecipients();
         PlayerManager manager = new PlayerManager(player);
+
+        recipients.removeIf(recipient -> {
+            PlayerManager recipient_manager = new PlayerManager(recipient);
+            Bukkit.broadcastMessage(recipient_manager.getHidePlayerSet().toString());
+            return recipient_manager.getHidePlayerSet().contains(player.getUniqueId());
+        });
 
         if (getChatResultType(event) == ChatResultType.SUCCESS) {
             if (PluginConfigManager.getTimeOutTime() > 0) manager.addTimeOut();
@@ -59,7 +68,7 @@ public class AsyncPlayerChatListener implements Listener {
         Player player = event.getPlayer();
         PlayerManager manager = new PlayerManager(player);
         if (MuteManager.isMuted(player)) result = ChatResultType.DENY_MUTE; //ミュートされている場合
-        if (manager.getTimeOutTime() < 0) result = ChatResultType.DENY_CONSECUTIVE_SEND; //連続送信禁止によるタイムアウト中の場合
+        if (manager.getTimeOutTime() > 0) result = ChatResultType.DENY_CONSECUTIVE_SEND; //連続送信禁止によるタイムアウト中の場合
         for (String cant_word : PluginConfigManager.getCantSendWords()) {
             if (event.getMessage().contains(cant_word)) {
                 result = ChatResultType.DENY_CANT_WORD; //禁止ワードが含まれている場合

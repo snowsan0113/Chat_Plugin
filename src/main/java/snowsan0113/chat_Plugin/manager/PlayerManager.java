@@ -43,20 +43,34 @@ public class PlayerManager {
         }
     }
 
+    /**
+     * 非表示プレイヤーを取得する関数
+     */
     public Set<UUID> getHidePlayerSet() {
-       JsonObject json = jsonManager.getRawElement().getAsJsonObject();
-       JsonObject player_obj = json.getAsJsonObject(player.getUniqueId().toString());
-       JsonArray hide_players = player_obj.getAsJsonArray("hide_players");
+       String uuid_string = player.getUniqueId().toString(); //プレイヤーのUUID
+       JsonObject json = jsonManager.getRawElement().getAsJsonObject(); //jsonを取得する
+       if (!json.has(uuid_string)) {
+           json.add(uuid_string, getDefaultJson(player)); //プレイヤーのキーがない場合、追加する
+       }
+       JsonObject player_obj = json.getAsJsonObject(uuid_string); //プレイヤーのJson
+       JsonArray hide_players = player_obj.getAsJsonArray("hide_players"); //非表示プレイヤーの配列
        Set<UUID> uuid_set = new HashSet<>();
-       for (JsonElement jsonElement : hide_players) {
-           String uuid_string = jsonElement.getAsString();
-           UUID uuid = UUID.fromString(uuid_string);
-           uuid_set.add(uuid);
+       for (JsonElement jsonElement : hide_players) { //json上から、配列をループする。
+           String get_uuid_string = jsonElement.getAsString(); //取得できた値を、文字列として取得
+           UUID uuid = UUID.fromString(get_uuid_string); //取得できた値を、UUIDに変換
+           uuid_set.add(uuid); //Setに追加する
        }
        return uuid_set;
     }
 
     public int getTimeOutTime() {
         return timeout_map.getOrDefault(player, -1);
+    }
+
+    private JsonObject getDefaultJson(OfflinePlayer player) {
+        JsonObject json = new JsonObject();
+        json.addProperty("name", player.getName());
+        json.add("hide_players", new JsonArray());
+        return json;
     }
 }

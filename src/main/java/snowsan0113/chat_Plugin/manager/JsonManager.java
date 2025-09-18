@@ -60,7 +60,6 @@ public class JsonManager {
      * @apiNote ファイルの方が大きい場合、メモリー上のJSONはファイルのJSONに置き換えられる
      */
     public void updateJson() {
-
         try {
             if (!getFile().exists()) createJson(); //無い場合は作成
             if (raw_element == null) {
@@ -78,6 +77,7 @@ public class JsonManager {
             
             try (BufferedWriter write = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(getFile().toPath()), StandardCharsets.UTF_8))) {
                 write.write(gson.toJson(raw_element));
+                Bukkit.getLogger().info("[ChatPlugin] " + getFile().getName() + "の更新に成功しました。");
             }
 
         } catch (IOException e) {
